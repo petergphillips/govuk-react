@@ -18,6 +18,13 @@ const wrapperMultipleTopNavAnchor = (
   </TopNav>
 );
 
+const wrapperMultipleTopNavAnchorOpen = (
+  <TopNav defaultOpen active={1}>
+    <Anchor href="/section">Section 1</Anchor>
+    <Anchor href="/section">Section 1</Anchor>
+  </TopNav>
+);
+
 const wrapperNavLinkAnchor = (
   <TopNav>
     <NavLinkAnchor href="/nav-link">Nav link</NavLinkAnchor>
@@ -44,6 +51,10 @@ describe(TopNav, () => {
 
   it('should render an unordered list without ghost/duff children', () => {
     expect(mount(wrapperEmptyNode).find('ul li')).toHaveLength(2);
+  });
+
+  it('should render as flex with defaultOpen', () => {
+    expect(mount(wrapperMultipleTopNavAnchorOpen).find('Ul').props().open).toBe(true);
   });
 
   it('matches the <TopNav> with multiple <Anchor> tags snapshot', () => {
