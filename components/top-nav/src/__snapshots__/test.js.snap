@@ -475,13 +475,13 @@ exports[`TopNav matches the <TopNav> with a <NavLinkAnchor> tag snapshot: enzyme
                 </div>
               </MenuButtonWrapper>
               <Input
-                checked={false}
+                defaultChecked={false}
                 id="govuk-react-menu-button"
                 type="checkbox"
               >
                 <input
-                  checked={false}
                   className="emotion-20 emotion-21"
+                  defaultChecked={false}
                   id="govuk-react-menu-button"
                   type="checkbox"
                 />
@@ -998,13 +998,13 @@ exports[`TopNav matches the <TopNav> with multiple <Anchor> tags snapshot: enzym
                 </div>
               </MenuButtonWrapper>
               <Input
-                checked={false}
+                defaultChecked={false}
                 id="govuk-react-menu-button"
                 type="checkbox"
               >
                 <input
-                  checked={false}
                   className="emotion-20 emotion-21"
+                  defaultChecked={false}
                   id="govuk-react-menu-button"
                   type="checkbox"
                 />
