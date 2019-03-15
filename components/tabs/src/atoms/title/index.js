@@ -12,4 +12,8 @@ const TabsTitle = styled('h2')(
   },
 );
 
+TabsTitle.defaultProps = {
+  children: 'Contents',
+};
+
 export default TabsTitle;

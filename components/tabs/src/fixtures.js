@@ -1,9 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, useLayoutEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { BREAKPOINTS } from '@govuk-react/constants';
 import { H2, H4 } from '@govuk-react/heading';
 import SectionBreak from '@govuk-react/section-break';
 import Table from '@govuk-react/table';
+import { MemoryRouter, Route, Link } from 'react-router-dom';
+import { useMedia } from 'react-use-media';
 
 import Tabs from '.';
 
@@ -245,7 +247,7 @@ class ProposedClassPropertiesPlugin extends Component {
     const { tabIndex } = this.state;
     return (
       <Tabs>
-        <Tabs.Title>Contents</Tabs.Title>
+        <Tabs.Title />
         <Tabs.List>
           {arrProposedBabel.map(({ contentListItem, id }, index) => (
             <Tabs.Tab
@@ -340,4 +342,60 @@ HooksExample.defaultProps = sharedDefaultProps;
 
 HooksExample.propTypes = sharedPropTypes;
 
-export { HooksExample, ProposedClassPropertiesPlugin, SimpleTabs, SimpleMapTabs, TableTabs };
+// This example shows all panels when in mobile mode, but the route will still be updated
+// to match the last clicked tab title.
+// To show only the active panel on mobiles, simply remove the `isTablet` code.
+// eslint-disable-next-line react/prop-types
+const RouterTabs = ({ match: { params: { section } } }) => {
+  const isTablet = useMedia(`(min-width: ${BREAKPOINTS.TABLET})`);
+  const [prevSection, setPrevSection] = useState(undefined);
+
+  useLayoutEffect(() => {
+    // scroll to the chosen tab if it's changed
+    if ((section !== prevSection) && !isTablet) {
+      // eslint-disable-next-line no-undef
+      document.querySelector(`#${section || 'first'}`).scrollIntoView();
+    }
+    setPrevSection(section);
+  });
+
+  return (
+    <Tabs>
+      <Tabs.Title />
+      <Tabs.List>
+        <Tabs.Tab as={Link} selected={!section} to="/">First tab</Tabs.Tab>
+        <Tabs.Tab as={Link} selected={section === 'test'} to="/test">Second tab</Tabs.Tab>
+      </Tabs.List>
+      <Route
+        path={isTablet ? '/' : null}
+        exact={isTablet}
+        render={
+          () => <Tabs.Panel id="first" selected>First tab contents</Tabs.Panel>
+        }
+      />
+      <Route
+        path={isTablet ? '/test' : null}
+        render={
+          () => <Tabs.Panel id="test" selected>Second tab selected</Tabs.Panel>
+        }
+      />
+    </Tabs>
+  );
+};
+
+const ReactRouterExample = () => (
+  <MemoryRouter>
+    <div>
+      <Route path="/:section?" component={RouterTabs} />
+    </div>
+  </MemoryRouter>
+);
+
+export {
+  HooksExample,
+  ProposedClassPropertiesPlugin,
+  SimpleTabs,
+  SimpleMapTabs,
+  TableTabs,
+  ReactRouterExample,
+};
