@@ -342,9 +342,11 @@ HooksExample.defaultProps = sharedDefaultProps;
 
 HooksExample.propTypes = sharedPropTypes;
 
-// This example shows all panels when in mobile mode, but the route will still be updated
-// to match the last clicked tab title.
-// To show only the active panel on mobiles, simply remove the `isTablet` code.
+// This example demonstrates one way to use react-router with tabs.
+// The use of useMedia means it is not suitable for server-side rendering.
+// When in mobile mode, all panels will be shown but the route will
+// still be updated to match the last clicked tab title.
+// NB in this example react-router is in control over which panel is rendered
 // eslint-disable-next-line react/prop-types
 const RouterTabs = ({ match: { params: { section } } }) => {
   const isTablet = useMedia(`(min-width: ${BREAKPOINTS.TABLET})`);
@@ -376,7 +378,7 @@ const RouterTabs = ({ match: { params: { section } } }) => {
       <Route
         path={isTablet ? '/test' : null}
         render={
-          () => <Tabs.Panel id="test" selected>Second tab selected</Tabs.Panel>
+          () => <Tabs.Panel id="test" selected>Second tab contents</Tabs.Panel>
         }
       />
     </Tabs>
@@ -391,6 +393,72 @@ const ReactRouterExample = () => (
   </MemoryRouter>
 );
 
+// This example demonstrates one way to use tabs with react-router in a way
+// that is compatible with server-side/universal rendering
+// NB in this example react-router does not directly control what content/panel is rendered
+// and on a mobile view the client will not jump to the content for the clicked title
+// eslint-disable-next-line react/prop-types
+const RouterTabsSSR = ({ match: { params: { section } } }) => (
+  <Tabs>
+    <Tabs.Title />
+    <Tabs.List>
+      <Tabs.Tab as={Link} selected={!section} to="/">First tab</Tabs.Tab>
+      <Tabs.Tab as={Link} selected={section === 'test'} to="/test">Second tab</Tabs.Tab>
+    </Tabs.List>
+    <Tabs.Panel selected={!section}>
+      First tab contents
+    </Tabs.Panel>
+    <Tabs.Panel selected={section === 'test'}>
+      Second tab contents
+    </Tabs.Panel>
+  </Tabs>
+);
+
+const ReactRouterSSRExample = () => (
+  <MemoryRouter>
+    <div>
+      <Route path="/:section?" component={RouterTabsSSR} />
+    </div>
+  </MemoryRouter>
+);
+
+// This example demonstrates another way to use tabs with react-router in a way
+// that is compatible with server-side/universal rendering
+// NB in this example react-router controls what content is rendered, and thus
+// will only show a single panel, even when the screen is at a mobile width
+// eslint-disable-next-line react/prop-types
+const RouterTabsSSRSinglePanel = ({ match: { params: { section } } }) => (
+  <Tabs>
+    <Tabs.Title />
+    <Tabs.List>
+      <Tabs.Tab as={Link} selected={!section} to="/">First tab</Tabs.Tab>
+      <Tabs.Tab as={Link} selected={section === 'test'} to="/test">Second tab</Tabs.Tab>
+    </Tabs.List>
+    <Route
+      path="/"
+      exact
+      render={
+        () => <Tabs.Panel id="first" selected>First tab contents</Tabs.Panel>
+      }
+    />
+    <Route
+      path="/test"
+      render={
+        () => <Tabs.Panel id="test" selected>Second tab contents</Tabs.Panel>
+      }
+    />
+  </Tabs>
+);
+
+const ReactRouterSSRSinglePanelExample = () => (
+  <MemoryRouter>
+    <div>
+      <Route path="/:section?" component={RouterTabsSSRSinglePanel} />
+    </div>
+  </MemoryRouter>
+);
+
+
 export {
   HooksExample,
   ProposedClassPropertiesPlugin,
@@ -398,4 +466,6 @@ export {
   SimpleMapTabs,
   TableTabs,
   ReactRouterExample,
+  ReactRouterSSRExample,
+  ReactRouterSSRSinglePanelExample,
 };

@@ -10,6 +10,8 @@ import {
   SimpleMapTabs,
   TableTabs,
   ReactRouterExample,
+  ReactRouterSSRExample,
+  ReactRouterSSRSinglePanelExample,
 } from './fixtures';
 import ReadMe from '../README.md';
 
@@ -32,4 +34,17 @@ examples.add('complex mapped table', () => <TableTabs />);
 
 examples.add('hooks example', () => <HooksExample defaultIndex={number('defaultIndex', 1)} />);
 
-examples.add('using react-router', () => <ReactRouterExample />);
+examples.add(
+  'using react-router (client-side)',
+  () => <ReactRouterExample />,
+);
+
+examples.add(
+  'using react-router (server-side rendering compatible)',
+  () => <ReactRouterSSRExample />,
+);
+
+examples.add(
+  'using react-router (server-side rendering compatible, single panel only)',
+  () => <ReactRouterSSRSinglePanelExample />,
+);
