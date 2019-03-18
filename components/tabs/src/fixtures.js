@@ -359,7 +359,7 @@ const RouterTabs = ({ match: { params: { section } } }) => {
       document.querySelector(`#${section || 'first'}`).scrollIntoView();
     }
     setPrevSection(section);
-  });
+  }, [section, isTablet]);
 
   return (
     <Tabs>
