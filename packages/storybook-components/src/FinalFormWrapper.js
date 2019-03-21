@@ -9,7 +9,7 @@ const FinalFormWrapper = ({ children }) => (
   <Form
     onSubmit={action('submit')}
     render={({
-      handleSubmit, reset, submitting, pristine, values,
+      handleSubmit, form: { reset }, submitting, pristine, values,
     }) => (
       <form onSubmit={handleSubmit}>
         <div>{children}</div>
